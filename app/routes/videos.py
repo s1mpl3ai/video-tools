@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify ,current_app
 videos_bp = Blueprint('videos_bp', __name__)
+from app.middlewares.auth import require_api_key
 
 @videos_bp.route('/', methods=['POST'])
+@require_api_key
 def upload_video():
     if 'video' not in request.files:
         return jsonify({'message': 'No file provided'}), 400
