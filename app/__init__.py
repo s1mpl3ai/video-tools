@@ -10,10 +10,9 @@ def create_app():
     load_dotenv(override=True)
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024 
+    app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024 
     db_instance = Database(app)
     Migrate(app, db_instance.db)
-    # db_instance.init_app(app)
 
     from .services.video_service import VideoService
     app.video_service = VideoService(db_instance.db)
@@ -23,4 +22,3 @@ def create_app():
 
     return app
 
-from werkzeug.exceptions import RequestEntityTooLarge

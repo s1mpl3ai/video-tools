@@ -128,3 +128,12 @@ def merge_videos():
         'upload_time': new_video.uploaded_at
     }
     return jsonify(response), 200
+
+@videos_bp.route('/all', methods=['GET'])
+def get_all_videos():
+    try:
+        video_list = current_app.video_service.get_all_videos()
+        return jsonify({"videos": video_list}), 200
+    except Exception as e:
+        current_app.logger.exception("Error fetching all videos")
+        return jsonify({"message": str(e)}), 500

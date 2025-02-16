@@ -64,7 +64,10 @@ Before using this project, ensure your system meets the following requirements:
    ```bash
    mkdir file_object_storage
    ```
-
+5. Create the .env file and tweak the variables if needed
+   ```bash
+   cp .env.dist .env
+   ```
 
 ---
 

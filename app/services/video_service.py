@@ -103,3 +103,20 @@ class VideoService:
             'label': "Merged Video"
         }
         return self.video_repository.create(new_video_info)
+    
+    def get_all_videos(self):
+        try:
+            videos = self.video_repository.get_all()
+            return [
+                {
+                    "label": video.label,
+                    "filename": video.file_name,
+                    "mime_type": video.mime_type,
+                    "length": round(video.length, 2),  
+                    "size_mb": round(video.size / (1024 * 1024), 2), 
+                    "uploaded_time": video.uploaded_at.strftime("%Y-%m-%d %H:%M:%S")  
+                }
+                for video in videos
+            ]
+        except Exception as e:
+            raise Exception(f"Error fetching all videos: {str(e)}")

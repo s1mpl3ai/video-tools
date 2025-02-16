@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "9f2ced2c-69b4-432d-998f-e600cc6ce301",
+		"name": "video-tools",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19226597"
+	},
+	"item": [
+		{
+			"name": "Get download link",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "expiry_time_minutes",
+						"value": "2",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "X-API-Key",
+						"value": "abc123",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "label",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "video",
+							"type": "file",
+							"src": "/Users/sumit/Downloads/IMG_9844.MOV"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/videos/14/link?expiry_time_minutes=120",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"videos",
+						"14",
+						"link"
+					],
+					"query": [
+						{
+							"key": "expiry_time_minutes",
+							"value": "120"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All videos",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "abc123",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/videos/all",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"videos",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Trim video",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "abc123",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"start\" : 5,\n    \"end\" : 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/videos/4/trim",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"videos",
+						"4",
+						"trim"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Merge videos",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "abc123",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"video_ids\" :[4,5]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/videos/merge",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"videos",
+						"merge"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload file",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "abc123"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "label",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "video",
+							"type": "file",
+							"src": "/Users/sumit/Downloads/IMG_9841.MOV"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/videos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"videos"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
