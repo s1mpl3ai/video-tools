@@ -11,9 +11,7 @@ This project provides tools for merging video files using FFmpeg and managing th
 4. [Usage](#usage)
 5. [Makefile Hierarchy](#makefile-hierarchy)
 6. [Troubleshooting](#troubleshooting)
-7. [Contributing](#contributing)
-8. [License](#license)
-9. [Contact](#contact)
+
 
 ---
 
@@ -114,20 +112,47 @@ This will:
 
 The Makefile provides the following targets:
 
+### Variables
+
+```makefile
+VENV_DIR := myenv
+PYTHON := $(shell pyenv which python)
+PIP := $(VENV_DIR)/bin/pip3
+FLASK := $(VENV_DIR)/bin/flask
+PYTEST := $(VENV_DIR)/bin/pytest
+```
+
+### Commands
+
 - **install**  
-  Creates a virtual environment using Python 3.10.16. Upgrades pip and installs dependencies from `requirements.txt`.
+  Creates a virtual environment using Python 3.10.16, upgrades pip, and installs dependencies from `requirements.txt`.
+  ```bash
+  make install
+  ```
 
 - **db_init**  
   Initializes the SQLite database and runs Flask migrations to set up the database schema.
+  ```bash
+  make db_init
+  ```
 
 - **run**  
   Starts the Flask development server.
+  ```bash
+  make run
+  ```
 
 - **test**  
   Runs tests with coverage using pytest.
+  ```bash
+  make test
+  ```
 
 - **clean**  
   Removes the virtual environment (`myenv`), deletes Python cache files (`*.pyc`, `__pycache__`), removes the database (`app.db`) and migrations folder, and cleans up the `file_object_storage` directory.
+  ```bash
+  make clean
+  ```
 
 ---
 
@@ -155,5 +180,4 @@ The Makefile provides the following targets:
 4. **Database Initialization Fails**  
    Ensure Flask is installed and the `FLASK_APP` environment variable is set correctly in the Makefile.
 
-
-
+---

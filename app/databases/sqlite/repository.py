@@ -24,7 +24,6 @@ class VideoRepository:
         return self.db.session.query(Video).get(id)
 
     def get_all(self):
-        session = self.get_session()
         return self.db.session.query(Video).all()
 
     

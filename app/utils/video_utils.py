@@ -7,6 +7,7 @@ import tempfile
 from flask import current_app, url_for
 from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired, BadSignature
 from app.config import Config
+import subprocess
 import logging 
 logger = logging.getLogger(__name__)
 
@@ -109,3 +110,58 @@ class VideoUtils:
             raise ValueError('Token has expired')
         print(data.get('file_path'))
         return data.get('file_path')
+    
+    def trim_video_file(self, original_path, start, end, output_path):
+        # Additional checks have already been performed at a higher level.
+        logger.info("Trimming file %s from %s to %s seconds", original_path, start, end)
+        command = [
+            "ffmpeg",
+            "-i", original_path,
+            "-ss", str(start),
+            "-to", str(end),
+            "-c", "copy",
+            output_path
+        ]
+        subprocess.run(command, check=True)
+        logger.info("Trimmed video saved to %s", output_path)
+
+    
+    def merge_video_files(self, file_paths, output_path):
+       
+        logger.info("Merging video files: %s", file_paths)
+        # Check that each file exists.
+        for path in file_paths:
+            if not os.path.exists(path):
+                logger.error("File does not exist: %s", path)
+                raise ValueError(f"File not found: {path}")
+
+        with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".txt") as list_file:
+            for path in file_paths:
+                list_file.write(f"file '{path}'\n")
+            list_filename = list_file.name
+
+        try:
+            command = [
+                "ffmpeg",
+                "-f", "concat",
+                "-safe", "0",
+                "-i", list_filename,
+                "-fflags", "+genpts",       # Regenerate timestamps
+                "-r", "30",                 # Force 30 FPS output (optional)
+                "-c", "copy",               # No re-encoding
+                "-metadata:s:v", "rotate=0",  # Strip rotation metadata
+                "-video_track_timescale", "30k",  # Standardize timebase
+                "-movflags", "+faststart",
+                "-y",
+                output_path
+            ]
+            # logger.info("Running FFmpeg command: %s", " ".join(command))
+            subprocess.run(command, check=True)
+            logger.info("Merged video saved to %s", output_path)
+        
+        except subprocess.CalledProcessError as e:
+            logger.error("Error merging videos: %s", e)
+            raise 
+        finally:
+            os.remove(list_filename)
+        logger.info("Merge completed sucessfully %s", output_path)
