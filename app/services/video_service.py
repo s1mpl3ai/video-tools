@@ -3,6 +3,7 @@ from app.utils.video_utils import VideoUtils
 from app.databases.object_storage.object_db import LocalFileServer
 import uuid
 import os
+import logging 
 class VideoService:
     def __init__(self,db):
         self.video_repository = VideoRepository(db)
@@ -15,6 +16,7 @@ class VideoService:
             video_info['label'] = label
             return self.video_repository.create(video_info)
         except Exception as e:
+            logging.error(f"Error saving video: {str(e)}")
             raise e
 
     def get(self, id):
@@ -28,6 +30,7 @@ class VideoService:
             video = self.get(id)
             return self.video_utils.get_video_link(video.file_path,expiry_time_minutes=exiperation_time)
         except Exception as e:
+            logging.error(f"Error getting video link: {str(e)}")
             raise e
             
     def download(self,token): 
@@ -36,17 +39,21 @@ class VideoService:
             print("rrecieved_file_path",file_path)
             return self.object_db.get_file(file_path)
         except Exception as e:
+            logging.error(f"Error downloading video: {str(e)}")
             raise e
     
     def trim_video(self, video_id, start, end):
        
         original_video = self.get(video_id)
         if not original_video:
+            logging.error("Video not found")
             raise ValueError("Video not found")
         
         if start < 0:
+            logging.error("Start time must be non-negative")
             raise ValueError("Start time must be non-negative")
         if end <= start:
+            logging.error("End time must be greater than start time")
             raise ValueError("End time must be greater than start time")
         if end > original_video.length:
             raise ValueError("End time exceeds original video duration")
@@ -57,7 +64,9 @@ class VideoService:
 
         try:
             self.video_utils.trim_video_file(original_path, start, end, new_file_path)
+            logging.info(f"Trimmed video saved at {new_file_path}")
         except Exception as e:
+            logging.error(f"Error trimming video: {str(e)}")
             raise Exception("Error trimming video: " + str(e))
         
         new_size = os.path.getsize(new_file_path)
@@ -79,16 +88,23 @@ class VideoService:
 
         videos = [self.get(vid) for vid in video_ids]
         if any(v is None for v in videos):
+            logging.error("One or more videos not found")
             raise ValueError("One or more videos not found")
         
         file_paths = [video.file_path for video in videos]
+        file_type_set = set(video.mime_type for video in videos)
 
+        if len(file_type_set) > 1:
+            logging.error("All videos must have the same format")
+            raise ValueError("All videos must have the same format")
+        
         new_filename = f"merged_{uuid.uuid4().hex}_{os.path.basename(file_paths[0])}"
         new_file_path = os.path.join(self.video_utils.upload_folder, new_filename)
 
         try:
             self.video_utils.merge_video_files(file_paths, new_file_path)
         except Exception as e:
+            logging.error(f"Error merging videos: {str(e)}")    
             raise Exception("Error merging videos: " + str(e))
         
         total_length = sum(video.length for video in videos)
@@ -119,4 +135,5 @@ class VideoService:
                 for video in videos
             ]
         except Exception as e:
+            logging.error(f"Error fetching all videos: {str(e)}")
             raise Exception(f"Error fetching all videos: {str(e)}")

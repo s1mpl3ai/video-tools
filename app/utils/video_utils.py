@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from app.config import Config
 import tempfile
 from flask import current_app, url_for
-from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired, BadSignature
+from itsdangerous import URLSafeTimedSerializer as Serializer, BadSignature
 from app.config import Config
 import subprocess
 import logging 
@@ -13,11 +13,12 @@ logger = logging.getLogger(__name__)
 
 class VideoUtils: 
     def __init__(self):
-        self.upload_folder = Config.UPLOAD_FOLDER
-        self.allowed_extensions = {'mp4', 'avi', 'mov', 'flv', 'wmv', 'mkv'}
-        self.max_video_length = Config.VIDEO_LENGTH_LIMIT_SECONDS
-        self.max_video_size = Config.VIDEO_SIZE_LIMIT_MB
         self.config = Config()
+        self.upload_folder = self.config.UPLOAD_FOLDER
+        self.allowed_extensions = {'mp4', 'avi', 'mov', 'flv', 'wmv', 'mkv'}
+        self.max_video_length = self.config.VIDEO_LENGTH_LIMIT_SECONDS
+        self.max_video_size = self.config.VIDEO_SIZE_LIMIT_MB
+        self.min_video_length = self.config.VIDEO_LENGTH_MIN_SECONDS
 
     def is_allowed_extension(self, filename):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in self.allowed_extensions
@@ -37,10 +38,12 @@ class VideoUtils:
         try: 
             video = cv2.VideoCapture(temp_path)
             if not video.isOpened():
+                logger.error("Could not open the video file")
                 raise ValueError('Could not open the video file')
             frames = video.get(cv2.CAP_PROP_FRAME_COUNT)
             fps = video.get(cv2.CAP_PROP_FPS)
             if fps == 0 : 
+                logger.error("Could not get the frames per second")
                 raise ValueError('Could not get the frames per second')
             video_length = frames / fps
             video.release()
@@ -58,15 +61,24 @@ class VideoUtils:
         filename = secure_filename(file.filename)
         filename = f"{int(time.time())}_{filename}"
         if not self.is_allowed_extension(filename):
+            logger.error("Invalid file extension: %s", filename)
             raise ValueError('Invalid file extension')
         
         file_size = self.get_file_size(file)
         if file_size > self.max_video_size:
-            raise ValueError('File size exceeds the limit')
+            logger.error("File size exceeds the limit: %d", file_size)
+            max_video_size_mb = self.max_video_size / (1024 * 1024)
+            raise ValueError(f"File size exceeds the limit ({max_video_size_mb:.2f} MB)")
+
         
         file_duration = self.get_video_length(file)
         if file_duration > self.max_video_length:
-            raise ValueError('File duration exceeds the limit')
+            logger.error("File duration exceeds the limit: %d", self.max_video_length)
+            raise ValueError(f"File duration exceeds the limit ({self.max_video_length} seconds)")
+
+        if file_duration == 0 or file_duration is None or file_duration < self.min_video_length:
+            logger.error("File duration is too small: %d", file_duration)
+            raise ValueError(f"File duration is too small. Minimum required duration is {self.min_video_length} seconds.")
 
         mime_type = self.get_mime_type(file.filename)
 

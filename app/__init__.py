@@ -4,10 +4,13 @@ from .config import Config
 from app.databases.sqlite.connection import Database
 from dotenv import load_dotenv
 from flask_migrate import Migrate
+import os 
+
 db = SQLAlchemy()
 
 def create_app():
-    load_dotenv(override=True)
+    env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env"))
+    load_dotenv(env_path,override=True)
     app = Flask(__name__)
     app.config.from_object(Config)
     app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024 
