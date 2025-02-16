@@ -48,14 +48,15 @@ class VideoUtils:
             os.remove(temp_path)
         return video_length
     
-    def get_mime_type(self, file):
-        try: 
-            return file.mime_type
-        except: 
+    def get_mime_type(self, filename):
+        try:
+            return filename.rsplit('.', 1)[1].lower()
+        except IndexError:
             return "Unknown"
     
     def save_video(self, file):
         filename = secure_filename(file.filename)
+        filename = f"{int(time.time())}_{filename}"
         if not self.is_allowed_extension(filename):
             raise ValueError('Invalid file extension')
         
@@ -67,7 +68,7 @@ class VideoUtils:
         if file_duration > self.max_video_length:
             raise ValueError('File duration exceeds the limit')
 
-        mime_type = self.get_mime_type(file)
+        mime_type = self.get_mime_type(file.filename)
 
         file_path = os.path.join(self.upload_folder, filename)
         file.seek(0)

@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from app.utils.singleton import SingletonMeta
-from flask_migrate import  upgrade
 
 
 class Database(metaclass=SingletonMeta):
