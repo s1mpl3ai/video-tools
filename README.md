@@ -64,16 +64,18 @@ Before using this project, ensure your system meets the following requirements:
    ffmpeg -version
    ```
 
+
 ---
 
 ## Installation
 
 Create a virtual environment and install dependencies:
+Enter you virtual environment name in the make file. 
 ```bash
 make install
 ```
 This will:
-- Create a virtual environment in the `myenv` directory.
+- Create a virtual environment in the `your_env` directory.
 - Upgrade pip to the latest version.
 - Install dependencies listed in `requirements.txt`.
 
@@ -81,8 +83,17 @@ This will:
 
 ## Usage
 
-1. **Merge Video Files**  
-   To merge video files, use the `merge_video_files` function in your Python script or interactive session. Ensure the input files are in the correct format and have consistent properties (e.g., frame rate, codec).
+
+1. **Initialize the Database**  
+   To initialize the SQLite database:
+   ```bash
+   make db_init
+   ```
+1. **Switch to virtual env**  
+   To initialize the SQLite database:
+   ```bash
+   source <venv-name>/bin/activate
+   ```
 
 2. **Run Flask Development Server**  
    To run the Flask development server:
@@ -90,19 +101,13 @@ This will:
    make run
    ```
 
-3. **Initialize the Database**  
-   To initialize the SQLite database:
-   ```bash
-   make db_init
-   ```
-
-4. **Run Tests**  
+3. **Run Tests**  
    To run tests with coverage:
    ```bash
    make test
    ```
 
-5. **Clean Up**  
+4. **Clean Up**  
    To remove temporary files, caches, and the virtual environment:
    ```bash
    make clean
@@ -154,6 +159,5 @@ The Makefile provides the following targets:
 
 4. **Database Initialization Fails**  
    Ensure Flask is installed and the `FLASK_APP` environment variable is set correctly in the Makefile.
-
 
 
