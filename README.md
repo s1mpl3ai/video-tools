@@ -11,9 +11,6 @@ This project provides tools for merging video files using FFmpeg and managing th
 4. [Usage](#usage)
 5. [Makefile Hierarchy](#makefile-hierarchy)
 6. [Troubleshooting](#troubleshooting)
-7. [Contributing](#contributing)
-8. [License](#license)
-9. [Contact](#contact)
 
 ---
 
