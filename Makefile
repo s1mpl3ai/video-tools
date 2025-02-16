@@ -3,8 +3,7 @@ VENV_DIR := myenv
 PYTHON := $(shell pyenv which python)  # Use pyenv-managed Python
 PIP := $(VENV_DIR)/bin/pip
 FLASK := $(VENV_DIR)/bin/flask
-PYTEST := $(VENV_DIR)/bin/pytest
-
+PYTHONVENV := $(VENV_DIR)/bin/python
 # Default target
 .PHONY: help
 help:
@@ -37,7 +36,11 @@ run: install
 # Run tests with coverage
 .PHONY: test
 test: install
-	$(PYTEST) --cov=app tests/
+	find . -type f -name '*.pyc' -delete
+	find . -type d -name '__pycache__' -exec rm -rf {} +
+	$(PYTHONVENV) -m coverage run -m unittest discover -s app/tests -p "test_*.py"
+	$(PYTHONVENV) -m coverage report -m -i
+	$(PYTHONVENV) -m coverage html  
 
 # Clean temporary files and caches
 .PHONY: clean
@@ -49,3 +52,4 @@ clean:
 	rm -f app/app.db
 	rm -rf file_object_storage
 	mkdir file_object_storage
+	rm -rf .coverage htmlcov/

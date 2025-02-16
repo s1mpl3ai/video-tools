@@ -60,6 +60,10 @@ Before using this project, ensure your system meets the following requirements:
    ```bash
    ffmpeg -version
    ```
+4. Make local storage folder: 
+   ```bash
+   mkdir file_object_storage
+   ```
 
 
 ---

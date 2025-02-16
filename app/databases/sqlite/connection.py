@@ -21,7 +21,7 @@ class Database(metaclass=SingletonMeta):
         self.session = self.db.session()
         return self.session
 
-    def __exit__(self, exc_type):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         
         if exc_type:
             self.session.rollback()
