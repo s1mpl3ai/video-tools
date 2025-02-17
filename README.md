@@ -1,7 +1,12 @@
 # Video Tools Project
 
 This project provides tools for merging video files using FFmpeg and managing the process . It requires Python 3.10.16, FFmpeg, and a working `make` environment.
+
+---
+
+# Note
 Temporary DB ( app.db ) is committed to the code if you want to have a look , make sure you delete it `rm -rf app/app.db` before starting the setup.
+
 ---
 
 ## Table of Contents
