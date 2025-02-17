@@ -170,3 +170,11 @@ The Makefile provides the following targets:
    Ensure Flask is installed and the `FLASK_APP` environment variable is set correctly in the Makefile.
 
 
+## Resources
+
+- **FFmpeg Official Documentation**: Comprehensive guide and reference for FFmpeg's features and usage.
+  - URL: [https://ffmpeg.org/documentation.html](https://ffmpeg.org/documentation.html)
+
+- **FFmpeg macOS Installation Guide**: Detailed instructions for installing FFmpeg on macOS systems.
+  - URL: [https://trac.ffmpeg.org/wiki/CompilationGuide/macOS](https://trac.ffmpeg.org/wiki/CompilationGuide/macOS)
+
