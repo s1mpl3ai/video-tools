@@ -1,6 +1,6 @@
 # Video Tools Project
 
-This project provides tools for merging video files using FFmpeg and managing the process via a `Makefile`. It requires Python 3.10.16, FFmpeg, and a working `make` environment.
+This project provides tools for merging video files using FFmpeg and managing the process . It requires Python 3.10.16, FFmpeg, and a working `make` environment.
 
 ---
 
